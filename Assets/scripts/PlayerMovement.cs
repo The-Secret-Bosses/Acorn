@@ -10,15 +10,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float climbSpeed = 5f;
 
     [SerializeField] float slideSpeed = 5f;
-    [SerializeField] float slideTime = 0.4f;
     [SerializeField] int hitpoint = 2;
-    [SerializeField] float knockback = 100f;
-    [SerializeField] float kbTime = 0.4f;
+    [SerializeField] float knockback = 5f;
+    [SerializeField] float kbTime = 2f;
     private float offSetY = -0.855f;
     private float offSetX = 0.184f;
 
-    private GameObject player;
-    private GameObject rebirth;
+    GameObject attack;
+
     bool isAlive = true;
     bool isAttacked = false;
     private int direction;
@@ -28,20 +27,21 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D myRigidbody;
     Animator myAnimator;
     CapsuleCollider2D myCapsuleCollider;
+    BoxCollider2D myBoxColl;
+    BoxCollider2D boxAttack;
     float gravityScaleAtStart;
     // Start is called before the first frame update
     void Start()
     {
         totalJump = 0;
-        player = GameObject.FindGameObjectsWithTag("Player")[0];
-        rebirth = GameObject.FindGameObjectsWithTag("Respawn")[0];
-        Debug.Log(player);
-        Debug.Log(rebirth);
-        rebirth.SetActive(false);
+        attack = GameObject.FindGameObjectsWithTag("Attack")[0];
+        attack.SetActive(false);
         myRigidbody = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
         myCapsuleCollider = GetComponent<CapsuleCollider2D>();
+        myBoxColl = GetComponent<BoxCollider2D>();
         gravityScaleAtStart = myRigidbody.gravityScale;
+        boxAttack = attack.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
     }
 
     bool HorizontalSpeed()
@@ -75,11 +75,11 @@ public class PlayerMovement : MonoBehaviour
 
     void IsRunning()
     {
-        if(!myAnimator.GetBool("Sliding"))
+
+        if(!myAnimator.GetBool("isSliding"))
         {
             myAnimator.SetBool("isRunning",HorizontalSpeed());
         }
-        
     }
 
     void FlipSprite()
@@ -87,15 +87,20 @@ public class PlayerMovement : MonoBehaviour
         if(HorizontalSpeed())
         {
             transform.localScale = new Vector2(Mathf.Sign(myRigidbody.velocity.x),1f);
+
+            float flipped = transform.localScale.x * boxAttack.offset.x;
+
+            boxAttack.offset = new Vector2(flipped, boxAttack.offset.y);
         }
     }
 
     void OnJump(InputValue value)
     {
         if(!isAlive){return;}
+        if(isAttacked){return;}
         bool isTouchingGround = myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
 
-        if(value.isPressed)
+        if(value.isPressed && isTouchingGround)
         {
             myAnimator.SetTrigger("Jumping");
             myRigidbody.velocity += new Vector2(0f,jumpSpeed);
@@ -116,16 +121,17 @@ public class PlayerMovement : MonoBehaviour
         {
             float xVector = (transform.localScale.x * slideSpeed);
 
-            myRigidbody.AddForce(new Vector2(xVector,myRigidbody.velocity.y));
+            Vector2 playerVelocity = new Vector2(xVector, myRigidbody.velocity.y);
+            myRigidbody.velocity = playerVelocity;
 
-            StartCoroutine("StopSlide");
         }
 
     }
 
     void OnSlide(InputValue value)
     {
-        
+        if(!isAlive){return;}
+        if(isAttacked){return;}
         if(!myAnimator.GetBool("isSliding"))
         {
             myAnimator.SetBool("isSliding",true);
@@ -136,75 +142,84 @@ public class PlayerMovement : MonoBehaviour
     {
         if(myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Enemy")))
         {
-            if((!isAttacked))
+            if((!isAttacked && !(myAnimator.GetBool("isSliding"))))
             {
-                if(hitpoint > 0)
+                if(hitpoint > 1)
                 {
                     hitpoint--;
                     Debug.Log("Got attacked!!");
                     myAnimator.SetTrigger("Attacked");
+                    myAnimator.SetBool("isRunning",false);
+                    StartCoroutine("StopSlide");
                     isAttacked = !isAttacked;
                     float xVector = (transform.localScale.x * knockback);
                     Debug.Log("X-Vector: "+xVector);
-                    Debug.Log("X-Vector neg: "+(-(xVector)));
-                    myRigidbody.AddForce(new Vector2(-(xVector),myRigidbody.velocity.y*3f));
-                    StartCoroutine("StopKnockback");
+                    Vector2 forcePush = new Vector2(6000f,20f);
+                    float forceMagnitude =1f;
+                    // Vector2 playerVelocity = new Vector2(xVector+knockback, myRigidbody.velocity.y+15f);
+                    // myRigidbody.velocity = playerVelocity;
+
+                    myRigidbody.AddForce(forcePush*forceMagnitude,ForceMode2D.Impulse);
                 }
                 else
                 {
-                    myAnimator.SetBool("isDead",true);
-
-                    myRigidbody.bodyType = RigidbodyType2D.Static;
-                    myCapsuleCollider.enabled = false;
-
-                    StartCoroutine("CancelDeath");
+                    if(myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
+                    {
+                        myAnimator.SetTrigger("Dying");
+                        myAnimator.SetBool("isRunning",false);
+                        myAnimator.SetBool("isSliding",false);
+                        myRigidbody.bodyType = RigidbodyType2D.Static;
+                        myCapsuleCollider.enabled = false;
+                    }
                 }
             }
         }
     }
 
-    IEnumerator CancelDeath()
-    {
-        yield return new WaitForSeconds(0.4f);
-        myAnimator.SetBool("isDead",false);
-        player.SetActive(false);
-        float xSet = 0f;
-        float ySet = 0f;
-        if(myRigidbody.velocity.x >0)
-        {
-            xSet = myRigidbody.velocity.x + offSetX;
-        }
-        else
-        {
-            xSet = myRigidbody.velocity.x - offSetX;
-        }
-        if(myRigidbody.velocity.y > 0)
-        {
-            ySet = myRigidbody.velocity.y - offSetY;
-        }
-        else
-        {
-            ySet = myRigidbody.velocity.y + offSetY;
-        }
+    
 
-        rebirth.transform.Translate(new Vector2(xSet, ySet));
-        rebirth.SetActive(true);
-        myRigidbody.velocity = new Vector2(0,2f);
-        myRigidbody.bodyType = RigidbodyType2D.Dynamic;
-        myCapsuleCollider.enabled = true;
-        hitpoint = 1;
+    IEnumerator Respawn()
+    {
+        yield return new WaitUntil(()=>{
+            Debug.Log("Testing");
+
+            myRigidbody.bodyType = RigidbodyType2D.Dynamic;
+            myCapsuleCollider.enabled = true;
+            hitpoint = 3;
+            return true;
+        });
     }
 
     IEnumerator StopKnockback()
     {
-        yield return new WaitForSeconds(kbTime);
-        isAttacked = false;
+        yield return new WaitUntil(()=>{
+            isAttacked = false;
+            return true;
+        });
+    }
+
+    IEnumerator Invincible()
+    {
+        yield return new WaitUntil(()=>{
+
+            myRigidbody.bodyType = RigidbodyType2D.Kinematic;
+            myCapsuleCollider.isTrigger = true;
+            
+            return true;
+
+        });
     }
 
     IEnumerator StopSlide()
     {
 
-        yield return new WaitForSeconds(slideTime);
-        myAnimator.SetBool("isSliding",false);
+        yield return new WaitUntil(()=>{
+            myAnimator.SetBool("isSliding",false);
+            myCapsuleCollider.isTrigger = false;
+            myBoxColl.enabled = false;
+            myRigidbody.bodyType = RigidbodyType2D.Dynamic;
+            return true;
+        });
+        
     }
 }

@@ -6,7 +6,10 @@ public class EnemyMovement : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 1f;
     Rigidbody2D myRigidbody;
+    Vector2 direction; 
     BoxCollider2D myBoxColl;
+    bool isAttacked = false;
+    GameObject enemy;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +21,7 @@ public class EnemyMovement : MonoBehaviour
     void Update()
     {
         myRigidbody.velocity = new Vector2(moveSpeed, 0f);
+        Attacked();
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
@@ -28,7 +32,18 @@ public class EnemyMovement : MonoBehaviour
             moveSpeed = -(moveSpeed);
             FlipEnemyFacing();
         }
+    }
 
+    void Attacked()
+    {
+        if(myBoxColl.IsTouchingLayers(LayerMask.GetMask("Attack")))
+        {
+            if(!isAttacked)
+            {
+                isAttacked = !isAttacked;
+                Destroy(this.gameObject);
+            }
+        }
     }
 
     void FlipEnemyFacing()
