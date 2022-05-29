@@ -23,6 +23,7 @@ public class EnemyMovement : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other) {
 
         Debug.Log("Trigger Collider Event");
+        Debug.Log(other.gameObject.name);
         if(!myBoxColl.IsTouchingLayers(LayerMask.GetMask("Player")))
         {
             moveSpeed = -(moveSpeed);
