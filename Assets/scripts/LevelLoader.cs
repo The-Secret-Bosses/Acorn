@@ -55,8 +55,13 @@ public class LevelLoader : MonoBehaviour
     {
         SceneManager.LoadScene("Options Screen");
     }
+    public void LoadIntroScene()
+    {
+        SceneManager.LoadScene("Intro Scene");
+    }
     public void LoadLoseScreen()
     {
+        Destroy(musicPlayer.gameObject);
         SceneManager.LoadScene("Lose Screen");
     }
     public void QuitGame()

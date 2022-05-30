@@ -234,7 +234,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            Debug.Log("Game Over!");
+            FindObjectOfType<LevelLoader>().LoadLoseScreen();
         }
         
     }
