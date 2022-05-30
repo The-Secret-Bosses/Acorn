@@ -90,6 +90,7 @@ public class PlayerMovement : MonoBehaviour
         Attacked();
         PowerUp();
         SetLayerMask();
+        
     }
 
     void OnMove(InputValue value)
@@ -150,6 +151,14 @@ public class PlayerMovement : MonoBehaviour
         {
             myAnimator.SetTrigger("Jumping");
             myRigidbody.velocity += new Vector2(0f, jumpSpeed);
+        }
+    }
+    void OnQuit(InputValue value)
+    {
+        if(value.isPressed)
+        {
+            Debug.Log("quitting");
+            FindObjectOfType<LevelLoader>().QuitGame();
         }
     }
 
