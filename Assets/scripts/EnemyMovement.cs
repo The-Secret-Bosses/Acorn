@@ -5,14 +5,17 @@ using UnityEngine;
 public class EnemyMovement : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 1f;
+    [SerializeField] AudioClip hitSFX;
     Rigidbody2D myRigidbody;
     Vector2 direction; 
     BoxCollider2D myBoxColl;
     bool isAttacked = false;
     GameObject enemy;
+    AudioSource audioSource;
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         myRigidbody = GetComponent<Rigidbody2D>();
         myBoxColl = GetComponent<BoxCollider2D>();
     }
@@ -40,6 +43,7 @@ public class EnemyMovement : MonoBehaviour
         {
             if(!isAttacked)
             {
+                AudioSource.PlayClipAtPoint(hitSFX, Camera.main.transform.position); 
                 isAttacked = !isAttacked;
                 Destroy(this.gameObject);
             }
