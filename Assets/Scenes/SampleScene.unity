@@ -525,6 +525,7 @@ MonoBehaviour:
   runSpeed: 7
   jumpSpeed: 25
   climbSpeed: 5
+  hitSFX: {fileID: 8300000, guid: 550f284bc50ae094987451a527495e2c, type: 3}
   slideSpeed: 14
   hitpoint: 3
   knockback: 50
@@ -733,7 +734,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.35723853, y: -0.025749207}
+  m_Offset: {x: 0.27056992, y: -0.06874204}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -744,7 +745,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.0311747, y: 1.9264631}
+  m_Size: {x: 1.2045119, y: 2.0124488}
   m_EdgeRadius: 0
 --- !u!70 &479433160
 CapsuleCollider2D:
@@ -759,8 +760,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.26120484, y: -0.07700515}
-  m_Size: {x: 1.0471857, y: 2.0343127}
+  m_Offset: {x: 0.26120484, y: -0.5705687}
+  m_Size: {x: 1.0471857, y: 1.0471857}
   m_Direction: 0
 --- !u!82 &479433161
 AudioSource:
@@ -1075,7 +1076,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.54, y: -0.110969454}
+  m_Offset: {x: 0.7519816, y: -0.20559728}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -1086,7 +1087,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.41274452, y: 0.19242018}
+  m_Size: {x: 0.4767077, y: 0.21743512}
   m_EdgeRadius: 0
 --- !u!1 &863508824
 GameObject:
@@ -1229,6 +1230,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32e5412b32f608540bc50188990db0e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelMusic: {fileID: 8300000, guid: c9d680bf375cf134e940db957445294e, type: 3}
+  winMusic: {fileID: 0}
+  loseMusic: {fileID: 0}
 --- !u!1 &879040923
 GameObject:
   m_ObjectHideFlags: 0
@@ -1308,7 +1312,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 100, y: 11.5}
+  m_Size: {x: 100, y: 11.25}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1391,10 +1395,10 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 3, y: 4.0078125}
+  m_Size: {x: 3, y: 4}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1078277266
@@ -1636,7 +1640,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 83beced04411b1544b19f2a89519a69b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2314,7 +2318,7 @@ TilemapCollider2D:
   m_GameObject: {fileID: 1714228870}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 2d5b3f3f500433f4b9b366f6d6eed2dc, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0

@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float runSpeed = 10f;
     [SerializeField] float jumpSpeed = 5f;
     [SerializeField] float climbSpeed = 5f;
-
+    [SerializeField] AudioClip hitSFX;
     [SerializeField] float slideSpeed = 5f;
     [SerializeField] int hitpoint = 2;
     [SerializeField] float knockback = 5f;
@@ -29,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
     CapsuleCollider2D myCapsuleCollider;
     BoxCollider2D myBoxColl;
     BoxCollider2D boxAttack;
+    
     float gravityScaleAtStart;
     // Start is called before the first frame update
     void Start()
@@ -142,9 +143,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if(myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Enemy")))
         {
-            if((!isAttacked && !(myAnimator.GetBool("isSliding"))))
+           
+            if(!isAttacked && !myAnimator.GetBool("isSliding"))
             {
-                if(hitpoint > 1)
+                AudioSource.PlayClipAtPoint(hitSFX, Camera.main.transform.position);
+                if (hitpoint > 1)
                 {
                     hitpoint--;
                     Debug.Log("Got attacked!!");
