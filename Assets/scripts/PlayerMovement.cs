@@ -227,16 +227,22 @@ public class PlayerMovement : MonoBehaviour
 
     void ConsumeWater()
     {
-        if(totalWaterPoint!=0)
+        if (totalWaterPoint != 1)
         {
+            myAnimator.SetTrigger("Dying");
+            myAnimator.SetBool("isRunning", false);
+            myAnimator.SetBool("isSliding", false);
+            myRigidbody.bodyType = RigidbodyType2D.Static;
+            myCapsuleCollider.enabled = false;
+
             totalWaterPoint--;
             ChangeWater();
         }
         else
         {
+            totalHitPoint = hitpoint;
             FindObjectOfType<LevelLoader>().LoadLoseScreen();
         }
-        
     }
 
 
