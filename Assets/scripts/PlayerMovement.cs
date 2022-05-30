@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float kbTime = 2f;
 
     private int totalHitPoint;
+    private int totalWaterPoint;
 
     GameObject attack;
     private GameObject[] hearts;
@@ -24,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
 
     bool isAlive = true;
     bool isAttacked = false;
+
+    private int airJump = 0;
 
     Vector2 moveInput;
     Rigidbody2D myRigidbody;
@@ -38,12 +41,12 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         totalHitPoint=hitpoint;
+        totalWaterPoint=waterpoint;
         attack = GameObject.FindGameObjectsWithTag("Attack")[0];
         hearts = GameObject.FindGameObjectsWithTag("Heart");
-        emptyHearts = GameObject.FindGameObjectsWithTag("EmptyHeart");
+        // emptyHearts = GameObject.FindGameObjectsWithTag("EmptyHeart");
         waters = GameObject.FindGameObjectsWithTag("Water");
         attack.SetActive(false);
-        ChangeOfHearts(emptyHearts,false);
         myRigidbody = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
         myCapsuleCollider = GetComponent<CapsuleCollider2D>();
@@ -60,14 +63,14 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void InitializeWater(GameObject[] w)
+    void ChangeWater()
     {
-        foreach(var k in w)
+        foreach(var k in waters)
         {
             k.SetActive(false);
         }
 
-        w[waterpoint-1].SetActive(true);
+        waters[totalWaterPoint-1].SetActive(true);
     }
 
     bool HorizontalSpeed()
@@ -85,6 +88,7 @@ public class PlayerMovement : MonoBehaviour
         FlipSprite();
         IsRunning();
         Attacked();
+        PowerUp();
         SetLayerMask();
     }
 
@@ -92,6 +96,21 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!isAlive) { return; }
         moveInput = value.Get<Vector2>();
+    }
+
+    void PowerUp()
+    {
+        if(myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("SunPower")) && totalHitPoint < hitpoint)
+        {
+            
+            totalHitPoint++;
+            hearts[totalHitPoint-1].SetActive(true);
+        }
+        else if(myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("WaterPower")) && totalWaterPoint < waterpoint)
+        {
+            totalWaterPoint++;
+            ChangeWater();
+        }
     }
 
     void Run()
@@ -167,7 +186,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Attacked()
     {
-        if (myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Enemy")))
+        if (myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Enemy")) || myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Spike")))
         {
 
             if (!isAttacked && !myAnimator.GetBool("isSliding"))
@@ -181,13 +200,13 @@ public class PlayerMovement : MonoBehaviour
                     isAttacked = !isAttacked;
                     float xVector = (transform.localScale.x * knockback);
                     Debug.Log("X-Vector: " + xVector);
-                    Vector2 forcePush = new Vector2(6000f, 20f);
+                    Vector2 forcePush = new Vector2(2000f, 20f);
                     float forceMagnitude = 1f;
                     DeleteHeart();
                     myRigidbody.AddForce(forcePush * forceMagnitude, ForceMode2D.Impulse);
                     totalHitPoint--;
                 
-                    if (myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) && totalHitPoint==0)
+                    if (totalHitPoint==0)
                     {
                         ConsumeWater();
                         myAnimator.SetTrigger("Dying");
@@ -203,15 +222,21 @@ public class PlayerMovement : MonoBehaviour
 
     void DeleteHeart()
     {
-        emptyHearts[totalHitPoint-1].SetActive(true);
         hearts[totalHitPoint-1].SetActive(false);
     }
 
     void ConsumeWater()
     {
-        waters[waterpoint-1].SetActive(false);
-        waterpoint--;
-        waters[waterpoint-1].SetActive(true);
+        if(totalWaterPoint!=0)
+        {
+            totalWaterPoint--;
+            ChangeWater();
+        }
+        else
+        {
+            Debug.Log("Game Over!");
+        }
+        
     }
 
 
@@ -224,7 +249,6 @@ public class PlayerMovement : MonoBehaviour
             myRigidbody.bodyType = RigidbodyType2D.Dynamic;
             myCapsuleCollider.enabled = true;
             ChangeOfHearts(hearts,true);
-            ChangeOfHearts(emptyHearts, false);
             totalHitPoint=hitpoint;
             return true;
         });
