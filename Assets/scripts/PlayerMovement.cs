@@ -143,7 +143,7 @@ public class PlayerMovement : MonoBehaviour
     void OnJump(InputValue value)
     {
         if (!isAlive) { return; }
-        if (isAttacked) { return; }
+        // if (isAttacked) { return; }
         bool isTouchingGround = myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
 
         if (value.isPressed && isTouchingGround)
