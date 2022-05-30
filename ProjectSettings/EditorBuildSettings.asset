@@ -12,7 +12,13 @@ EditorBuildSettings:
     path: Assets/Scenes/Main Menu.unity
     guid: b90b24edeb742414ab317a3053a4d41a
   - enabled: 1
+    path: Assets/Scenes/Intro Scene.unity
+    guid: 0a8e0d2617d09114caa30f85e375d895
+  - enabled: 1
     path: Assets/Scenes/Level 1.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/Lose Scene.unity
+    guid: b53d8eb1964cdab4c96f078fd474d4ab
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: b6b88926c0bdcd0499fd45f36729f057, type: 2}

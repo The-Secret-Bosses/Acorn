@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -31,6 +29,11 @@ public class LevelLoader : MonoBehaviour
     {
         //yield return new WaitForSeconds(loadingScreenTimeInSeconds);
         SceneManager.LoadScene("Splash Screen");
+    }
+
+    public void LoadLevelOne()
+    {
+        SceneManager.LoadScene("Level 1");
     }
     public void LoadNextScene()
     {
