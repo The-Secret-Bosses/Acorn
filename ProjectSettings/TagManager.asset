@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Shell
   - Attack
+  - Heart
+  - EmptyHeart
+  - Water
   layers:
   - Default
   - TransparentFX
