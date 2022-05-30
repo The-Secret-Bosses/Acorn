@@ -29,7 +29,8 @@ public class PlayerMovement : MonoBehaviour
     CapsuleCollider2D myCapsuleCollider;
     BoxCollider2D myBoxColl;
     BoxCollider2D boxAttack;
-    
+
+
     float gravityScaleAtStart;
     // Start is called before the first frame update
     void Start()
@@ -54,17 +55,18 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!isAlive){return;}
+        if (!isAlive) { return; }
         Run();
         Sliding();
         FlipSprite();
         IsRunning();
         Attacked();
+        SetLayerMask();
     }
 
     void OnMove(InputValue value)
     {
-        if(!isAlive){return;}
+        if (!isAlive) { return; }
         moveInput = value.Get<Vector2>();
     }
 
@@ -77,17 +79,17 @@ public class PlayerMovement : MonoBehaviour
     void IsRunning()
     {
 
-        if(!myAnimator.GetBool("isSliding"))
+        if (!myAnimator.GetBool("isSliding"))
         {
-            myAnimator.SetBool("isRunning",HorizontalSpeed());
+            myAnimator.SetBool("isRunning", HorizontalSpeed());
         }
     }
 
     void FlipSprite()
     {
-        if(HorizontalSpeed())
+        if (HorizontalSpeed())
         {
-            transform.localScale = new Vector2(Mathf.Sign(myRigidbody.velocity.x),1f);
+            transform.localScale = new Vector2(Mathf.Sign(myRigidbody.velocity.x), 1f);
 
             float flipped = transform.localScale.x * boxAttack.offset.x;
 
@@ -97,20 +99,20 @@ public class PlayerMovement : MonoBehaviour
 
     void OnJump(InputValue value)
     {
-        if(!isAlive){return;}
-        if(isAttacked){return;}
+        if (!isAlive) { return; }
+        if (isAttacked) { return; }
         bool isTouchingGround = myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
 
-        if(value.isPressed && isTouchingGround)
+        if (value.isPressed && isTouchingGround)
         {
             myAnimator.SetTrigger("Jumping");
-            myRigidbody.velocity += new Vector2(0f,jumpSpeed);
+            myRigidbody.velocity += new Vector2(0f, jumpSpeed);
         }
     }
 
     void OnFire(InputValue value)
     {
-        if(value.isPressed)
+        if (value.isPressed)
         {
             myAnimator.SetTrigger("Attack!!");
         }
@@ -118,7 +120,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Sliding()
     {
-        if(myAnimator.GetBool("isSliding"))
+        if (myAnimator.GetBool("isSliding"))
         {
             float xVector = (transform.localScale.x * slideSpeed);
 
@@ -131,20 +133,20 @@ public class PlayerMovement : MonoBehaviour
 
     void OnSlide(InputValue value)
     {
-        if(!isAlive){return;}
-        if(isAttacked){return;}
-        if(!myAnimator.GetBool("isSliding"))
+        if (!isAlive) { return; }
+        if (isAttacked) { return; }
+        if (!myAnimator.GetBool("isSliding"))
         {
-            myAnimator.SetBool("isSliding",true);
+            myAnimator.SetBool("isSliding", true);
         }
     }
 
     void Attacked()
     {
-        if(myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Enemy")))
+        if (myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Enemy")))
         {
-           
-            if(!isAttacked && !myAnimator.GetBool("isSliding"))
+
+            if (!isAttacked && !myAnimator.GetBool("isSliding"))
             {
                 AudioSource.PlayClipAtPoint(hitSFX, Camera.main.transform.position);
                 if (hitpoint > 1)
@@ -152,25 +154,25 @@ public class PlayerMovement : MonoBehaviour
                     hitpoint--;
                     Debug.Log("Got attacked!!");
                     myAnimator.SetTrigger("Attacked");
-                    myAnimator.SetBool("isRunning",false);
+                    myAnimator.SetBool("isRunning", false);
                     StartCoroutine("StopSlide");
                     isAttacked = !isAttacked;
                     float xVector = (transform.localScale.x * knockback);
-                    Debug.Log("X-Vector: "+xVector);
-                    Vector2 forcePush = new Vector2(6000f,20f);
-                    float forceMagnitude =1f;
+                    Debug.Log("X-Vector: " + xVector);
+                    Vector2 forcePush = new Vector2(6000f, 20f);
+                    float forceMagnitude = 1f;
                     // Vector2 playerVelocity = new Vector2(xVector+knockback, myRigidbody.velocity.y+15f);
                     // myRigidbody.velocity = playerVelocity;
 
-                    myRigidbody.AddForce(forcePush*forceMagnitude,ForceMode2D.Impulse);
+                    myRigidbody.AddForce(forcePush * forceMagnitude, ForceMode2D.Impulse);
                 }
                 else
                 {
-                    if(myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
+                    if (myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
                     {
                         myAnimator.SetTrigger("Dying");
-                        myAnimator.SetBool("isRunning",false);
-                        myAnimator.SetBool("isSliding",false);
+                        myAnimator.SetBool("isRunning", false);
+                        myAnimator.SetBool("isSliding", false);
                         myRigidbody.bodyType = RigidbodyType2D.Static;
                         myCapsuleCollider.enabled = false;
                     }
@@ -179,11 +181,12 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    
+
 
     IEnumerator Respawn()
     {
-        yield return new WaitUntil(()=>{
+        yield return new WaitUntil(() =>
+        {
             Debug.Log("Testing");
 
             myRigidbody.bodyType = RigidbodyType2D.Dynamic;
@@ -195,7 +198,8 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator StopKnockback()
     {
-        yield return new WaitUntil(()=>{
+        yield return new WaitUntil(() =>
+        {
             isAttacked = false;
             return true;
         });
@@ -203,11 +207,12 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator Invincible()
     {
-        yield return new WaitUntil(()=>{
+        yield return new WaitUntil(() =>
+        {
 
             myRigidbody.bodyType = RigidbodyType2D.Kinematic;
             myCapsuleCollider.isTrigger = true;
-            
+
             return true;
 
         });
@@ -216,13 +221,24 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator StopSlide()
     {
 
-        yield return new WaitUntil(()=>{
-            myAnimator.SetBool("isSliding",false);
-            myCapsuleCollider.isTrigger = false;
-            myBoxColl.enabled = false;
+        yield return new WaitUntil(() =>
+        {
+            myAnimator.SetBool("isSliding", false);
             myRigidbody.bodyType = RigidbodyType2D.Dynamic;
             return true;
         });
-        
+    }
+
+    void SetLayerMask()
+    {
+        if (myAnimator.GetBool("isSliding"))
+        {
+        gameObject.layer = LayerMask.NameToLayer("Slide");
+        }
+        else
+        {
+        gameObject.layer = LayerMask.NameToLayer("Player");
+
+        }
     }
 }
