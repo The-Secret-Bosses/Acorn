@@ -1278,14 +1278,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5566387785231416834, guid: 304571177e7daef49a9aba38b6d3672c, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 5566387785231416834, guid: 304571177e7daef49a9aba38b6d3672c, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5790240448240179474, guid: 304571177e7daef49a9aba38b6d3672c, type: 3}
       propertyPath: m_RootOrder
       value: 24
@@ -1333,26 +1325,6 @@ PrefabInstance:
     - target: {fileID: 5790240448240179481, guid: 304571177e7daef49a9aba38b6d3672c, type: 3}
       propertyPath: m_Name
       value: AcornParent
-      objectReference: {fileID: 0}
-    - target: {fileID: 5963719620693130641, guid: 304571177e7daef49a9aba38b6d3672c, type: 3}
-      propertyPath: m_Size.x
-      value: 1.076622
-      objectReference: {fileID: 0}
-    - target: {fileID: 5963719620693130641, guid: 304571177e7daef49a9aba38b6d3672c, type: 3}
-      propertyPath: m_Size.y
-      value: 0.43162525
-      objectReference: {fileID: 0}
-    - target: {fileID: 5963719620693130641, guid: 304571177e7daef49a9aba38b6d3672c, type: 3}
-      propertyPath: m_Offset.x
-      value: 0.52347183
-      objectReference: {fileID: 0}
-    - target: {fileID: 5963719620693130641, guid: 304571177e7daef49a9aba38b6d3672c, type: 3}
-      propertyPath: m_Offset.y
-      value: -0.17360896
-      objectReference: {fileID: 0}
-    - target: {fileID: 5963719620693130641, guid: 304571177e7daef49a9aba38b6d3672c, type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 304571177e7daef49a9aba38b6d3672c, type: 3}
