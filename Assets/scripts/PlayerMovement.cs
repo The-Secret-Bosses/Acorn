@@ -19,9 +19,9 @@ public class PlayerMovement : MonoBehaviour
     private int totalWaterPoint;
 
     GameObject attack;
-    private GameObject[] hearts;
-    private GameObject[] emptyHearts;
-    private GameObject[] waters;
+    private static GameObject[] hearts;
+    private static GameObject[] emptyHearts;
+    private static GameObject[] waters;
 
     bool isAlive = true;
     bool isAttacked = false;
@@ -143,7 +143,6 @@ public class PlayerMovement : MonoBehaviour
     void OnJump(InputValue value)
     {
         if (!isAlive) { return; }
-        if (isAttacked) { isAttacked=!isAttacked; }
         bool isTouchingGround = myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
 
         if (value.isPressed && isTouchingGround)
@@ -203,7 +202,7 @@ public class PlayerMovement : MonoBehaviour
                     
                     Debug.Log("Got attacked!!");
                     myAnimator.SetTrigger("Attacked");
-                    StartCoroutine("StopSlide");
+                    // StartCoroutine("StopSlide");
                     isAttacked = !isAttacked;
                     float xVector = (transform.localScale.x * knockback);
                     Debug.Log("X-Vector: " + xVector);
@@ -222,7 +221,7 @@ public class PlayerMovement : MonoBehaviour
                         myRigidbody.bodyType = RigidbodyType2D.Static;
                         myCapsuleCollider.enabled = false;
                     }
-                
+                    StartCoroutine("StopKnockback");
             }
         }
     }
@@ -269,11 +268,9 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator StopKnockback()
     {
-        yield return new WaitUntil(() =>
-        {
-            isAttacked = false;
-            return true;
-        });
+        yield return new WaitForSeconds(3f);
+
+        isAttacked = false;
     }
 
     IEnumerator Invincible()
