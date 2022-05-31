@@ -80,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (!isAlive) { return; }
         Run();
@@ -207,10 +207,10 @@ public class PlayerMovement : MonoBehaviour
                     isAttacked = !isAttacked;
                     float xVector = (transform.localScale.x * knockback);
                     Debug.Log("X-Vector: " + xVector);
-                    Vector2 forcePush = new Vector2(2000f, 20f);
-                    float forceMagnitude = 1f;
+                    //Vector2 forcePush = new Vector2(2000f, 20f);
+                    //float forceMagnitude = 1f;
                     DeleteHeart();
-                    myRigidbody.AddForce(forcePush * forceMagnitude, ForceMode2D.Impulse);
+                    //myRigidbody.AddForce(forcePush * forceMagnitude, ForceMode2D.Impulse);
                     totalHitPoint--;
                 
                     if (totalHitPoint==0)
