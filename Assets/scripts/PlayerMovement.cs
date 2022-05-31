@@ -33,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
     Animator myAnimator;
     CapsuleCollider2D myCapsuleCollider;
     BoxCollider2D myBoxColl;
-    BoxCollider2D boxAttack;
+    // BoxCollider2D boxAttack;
 
 
     float gravityScaleAtStart;
@@ -42,17 +42,17 @@ public class PlayerMovement : MonoBehaviour
     {
         totalHitPoint=hitpoint;
         totalWaterPoint=waterpoint;
-        attack = GameObject.FindGameObjectsWithTag("Attack")[0];
+        // attack = GameObject.FindGameObjectsWithTag("Attack")[0];
         hearts = GameObject.FindGameObjectsWithTag("Heart");
         // emptyHearts = GameObject.FindGameObjectsWithTag("EmptyHeart");
         waters = GameObject.FindGameObjectsWithTag("Water");
-        attack.SetActive(false);
+        // attack.SetActive(false);
         myRigidbody = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
         myCapsuleCollider = GetComponent<CapsuleCollider2D>();
         myBoxColl = GetComponent<BoxCollider2D>();
         gravityScaleAtStart = myRigidbody.gravityScale;
-        boxAttack = attack.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
+        // boxAttack = attack.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
     }
 
     void ChangeOfHearts(GameObject[] eh, bool operation)
@@ -122,7 +122,6 @@ public class PlayerMovement : MonoBehaviour
 
     void IsRunning()
     {
-
         if (!myAnimator.GetBool("isSliding"))
         {
             myAnimator.SetBool("isRunning", HorizontalSpeed());
@@ -135,16 +134,16 @@ public class PlayerMovement : MonoBehaviour
         {
             transform.localScale = new Vector2(Mathf.Sign(myRigidbody.velocity.x), 1f);
 
-            float flipped = transform.localScale.x * boxAttack.offset.x;
+            // float flipped = transform.localScale.x * boxAttack.offset.x;
 
-            boxAttack.offset = new Vector2(flipped, boxAttack.offset.y);
+            // boxAttack.offset = new Vector2(flipped, boxAttack.offset.y);
         }
     }
 
     void OnJump(InputValue value)
     {
         if (!isAlive) { return; }
-        // if (isAttacked) { return; }
+        if (isAttacked) { isAttacked=!isAttacked; }
         bool isTouchingGround = myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
 
         if (value.isPressed && isTouchingGround)
@@ -204,7 +203,6 @@ public class PlayerMovement : MonoBehaviour
                     
                     Debug.Log("Got attacked!!");
                     myAnimator.SetTrigger("Attacked");
-                    myAnimator.SetBool("isRunning", false);
                     StartCoroutine("StopSlide");
                     isAttacked = !isAttacked;
                     float xVector = (transform.localScale.x * knockback);
@@ -304,9 +302,14 @@ public class PlayerMovement : MonoBehaviour
 
     void SetLayerMask()
     {
+
         if (myAnimator.GetBool("isSliding"))
         {
         gameObject.layer = LayerMask.NameToLayer("Slide");
+        }
+        else if(myAnimator.GetBool("Attack!!"))
+        {
+            gameObject.layer = LayerMask.NameToLayer("Attack");
         }
         else
         {
